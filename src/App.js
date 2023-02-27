@@ -8,6 +8,7 @@ function App() {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+ 
 
   let getJson = () => {
     fetch("products.json")
@@ -41,9 +42,13 @@ function App() {
     
   };
 
+
+ 
+
   return (
     <div className="app">
       <h1>The Magic Store 🔮</h1>
+      
       <Search
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}  
