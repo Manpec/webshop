@@ -6,9 +6,9 @@ import ShoppingCart from "./components/ShoppingCart";
 
 function App() {
   const [products, setProducts] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
- 
+  const [cartItems, setCartItems] = useState([]);
 
   let getJson = () => {
     fetch("products.json")
@@ -17,11 +17,7 @@ function App() {
       })
       .then((data) => {
         setProducts(data); //Update jsonData
-        //console.log(data);
       })
-      // .then(
-      //   setSearchResults(products)
-      // )
       .catch((error) => {
         console.error(error.message);
       });
@@ -32,33 +28,46 @@ function App() {
   }, []);
 
   const onClickHandler = (e) => {
-      const results = products.filter(
+    const results = products.filter(
       (product) =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.description.toLowerCase().includes(searchTerm.toLowerCase())
     );
     console.log(results);
+    console.log(products);
     setSearchResults(results);
-    
   };
 
-
- 
+  const onAdd = (product) => {
+    const exist = cartItems.find(
+      (x) => x.product.productnumber === product.productnumber
+    );
+    if (exist) {
+      setCartItems(
+        cartItems.map((x) =>
+          x.product.productnumber === product.productnumber
+            ? { ...exist, qty: exist.qty + 1 }
+            : x
+        )
+      );
+    } else {
+      setCartItems([...cartItems, { product, qty: 1 }]);
+    }
+    console.log(cartItems);
+  };
 
   return (
     <div className="app">
       <h1>The Magic Store 🔮</h1>
-      
+
       <Search
         searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}  
+        setSearchTerm={setSearchTerm}
         clickHandler={onClickHandler}
       />
-      
-      <SearchResult
-       searchResults={searchResults}
-      />
-      <ShoppingCart />
+
+      <SearchResult searchResults={searchResults} onAdd={onAdd} />
+      <ShoppingCart cartItems={cartItems} />
     </div>
   );
 }

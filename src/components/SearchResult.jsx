@@ -8,7 +8,7 @@ export default function SearchResult(props) {
       
         {props.searchResults.map((item, i) => (
           
-            <Item key={i} item={item} onClick={props.onShowCart}/>
+            <Item key={i} item={item} onClick={props.onShowCart} onAdd={props.onAdd}/>
           
         ))}
       

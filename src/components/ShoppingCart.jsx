@@ -5,23 +5,15 @@ export default function ShoppingCart(props) {
   return (
     <div>
     <h1>ShoppingCart</h1>
-    <ul>
-      {}
-
-    </ul>
-    <ShoppingItem/>
+    <div>{props.cartItems.length === 0 && <div>Cart is Empty</div>}</div>
+     {props.cartItems.map((item, i) => (
+          
+          <ShoppingItem key={i} item={item}/>
+        
+      ))}
+   
     <span>Total Pris: </span>
     <span>{props.total}SEK</span>
     </div>
   )
 }
-
-
-{/* <ul>
-      {props.searchResults.map((item, i) => (
-       <li><Item
-       key={i}
-       item={item}
-       /></li>
-    ))}
-    </ul> */}
