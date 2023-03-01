@@ -17,7 +17,7 @@ export default function ShoppingItem(props) {
     <span>Qty:{props.item.qty}</span>
     <p>pris: {props.item.product.price} SEK</p>
     <p>subtotal: {parseInt(props.item.product.price )* props.item.qty} SEK</p>
-    <button onClick={onDeleteHandler}>Delete btn</button>
+    <button onClick={()=>onDeleteHandler(props.item)}>Delete btn</button>
     </>
   )
 }

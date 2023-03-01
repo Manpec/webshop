@@ -9,6 +9,7 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [cartItems, setCartItems] = useState([]);
+  const [total, setTotal] = useState(0)
 
   let getJson = () => {
     fetch("products.json")
@@ -26,6 +27,7 @@ function App() {
   useEffect(() => {
     getJson();
   }, []);
+
 
   const onClickHandler = (e) => {
     const results = products.filter(
@@ -50,11 +52,14 @@ function App() {
             : x
         )
       );
+      setTotal(total + product.price)
     } else {
       setCartItems([...cartItems, { product, qty: 1 }]);
+      setTotal(total + product.price)
     }
     console.log(cartItems);
   };
+
 
   return (
     <div className="app">
@@ -67,7 +72,7 @@ function App() {
       />
 
       <SearchResult searchResults={searchResults} onAdd={onAdd} />
-      <ShoppingCart cartItems={cartItems} />
+      <ShoppingCart cartItems={cartItems} total={total} />
     </div>
   );
 }
