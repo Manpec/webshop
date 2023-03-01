@@ -21,7 +21,7 @@ export default function Item(props) {
     <h2>{props.item.name}</h2>
     <button onClick={openModalHandler} >Link to modal </button>
     <p>{props.item.price} SEK</p>
-    <button >Add to card</button>
+    <button onClick={()=> props.onAdd(props.item)} >Add to ShoppingCart</button>
     {modalIsOpen && <Details 
     item={props.item}
     onClose={closeModalHandler}
