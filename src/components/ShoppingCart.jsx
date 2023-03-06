@@ -8,7 +8,7 @@ export default function ShoppingCart(props) {
     <h1>ShoppingCart</h1>
     <div>{props.cartItems.length === 0 && <div>Cart is Empty</div>}</div>
      {props.cartItems.map((item, i) =>(
-       <ShoppingItem key={i} item={item}/>
+       <ShoppingItem key={i} item={item} onDelete={props.onDelete}/>
      ))}
    
     <span>Total Pris: </span>
