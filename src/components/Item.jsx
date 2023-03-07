@@ -30,14 +30,14 @@ export default function Item(props) {
               <p className="card-text">{props.item.price} SEK</p>
               <button
                 type="button"
-                class="btn btn-outline-info"
+                className="btn btn-outline-info"
                 onClick={openModalHandler}
               >
                 More Information
               </button>
               <button
                 type="button"
-                class="btn btn-outline-primary"
+                className="btn btn-outline-primary"
                 onClick={() => props.onAdd(props.item)}
               >
                 Add to ShoppingCart
