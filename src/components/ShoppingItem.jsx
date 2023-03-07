@@ -1,11 +1,12 @@
 import React from "react";
+import './ShoppingItem.css'
 
 
 export default function ShoppingItem(props) {
   console.log(props.item);
   return (
-    <div className="card-wrapper">
-      <div className="card mb-3" style={{ maxWidth: "640px" }}>
+    <div className="card-wrapper width">
+      <div className="card mb-3 ">
         <div className="row g-0">
           <div className="col-md-4">
             <img
