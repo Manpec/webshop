@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./App.css";
+import styles from './App.module.css';
 import SearchResult from "./components/SearchResult";
 import Search from "./components/Search";
 import ShoppingCart from "./components/ShoppingCart";
@@ -9,6 +9,7 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [cartItems, setCartItems] = useState([]);
+  const [total, setTotal] = useState(0)
 
   let getJson = () => {
     fetch("products.json")
@@ -27,6 +28,7 @@ function App() {
     getJson();
   }, []);
 
+
   const onClickHandler = (e) => {
     const results = products.filter(
       (product) =>
@@ -38,11 +40,20 @@ function App() {
     setSearchResults(results);
   };
 
-  const onAdd = (product) => {
-    const exist = cartItems.find(
-      (x) => x.product.productnumber === product.productnumber
-    );
+ 
+
+  const onAddHandler = (product) => {//(props.item)
+     const exist = cartItems.find(
+      (item) => {
+        console.log(item.product.productnumber, product.productnumber);
+        return item.product.productnumber === product.productnumber;
+      }
+    ); 
+   
+
     if (exist) {
+      console.log(exist); //{product: {…}, qty: 1}
+      console.log(exist.qty);
       setCartItems(
         cartItems.map((x) =>
           x.product.productnumber === product.productnumber
@@ -50,24 +61,55 @@ function App() {
             : x
         )
       );
+      //setTotal(total + product.price)
     } else {
       setCartItems([...cartItems, { product, qty: 1 }]);
     }
+    setTotal(total + product.price) 
     console.log(cartItems);
   };
 
-  return (
-    <div className="app">
-      <h1>The Magic Store 🔮</h1>
+ 
 
+
+  const onDeleteHandler = (product) => {//(props.item)
+    if(product.qty === 1){
+      setCartItems(cartItems.filter((x)=> x.product.productnumber !== product.product.productnumber))
+      setTotal(total - product.product.price) 
+    }else{
+      setCartItems(
+        cartItems.map((x) =>
+          x.product.productnumber === product.product.productnumber
+            ? { ...product, qty: product.qty - 1 }
+            : x
+        )
+      );
+      setTotal(total - product.product.price) 
+    }
+  }
+
+
+  return (
+    <div >
+      <h1 className={styles.appTitle}>The Magic Store 🔮</h1>
+      <div className={styles.searchbar}>
       <Search
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         clickHandler={onClickHandler}
-      />
+        />
+        </div>
+      <div className={styles.app}>
+        
 
-      <SearchResult searchResults={searchResults} onAdd={onAdd} />
-      <ShoppingCart cartItems={cartItems} />
+        <div className={styles.search}>
+      
+      <SearchResult searchResults={searchResults} onAdd={onAddHandler} />
+        </div>
+        <div className={styles.shoppingCart}>
+      <ShoppingCart cartItems={cartItems} total={total} onDelete={onDeleteHandler}/>
+        </div>
+        </div>
     </div>
   );
 }
