@@ -5,24 +5,30 @@
     justify-content: space-around;
     flex-grow: 1;
     align-items: center;
-    margin-top: 100px;
+    margin-top:100px;
 }
 
 .appTitle{
     text-align: center;
+    padding-top: 50px;
 }
 .searchbar{
     display: flex;
     justify-content: center;
-    margin-top: 100px;
+    margin-top: 50px;
+    
 }
 .search-searchResult{
     display: flex;
     flex-direction: column;
     
 }
-.search{
+
+
+
+h1{
    
+    color: rgb(196, 193, 193);
 }
 .shoppingCart{
     float: rigth;

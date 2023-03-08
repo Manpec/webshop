@@ -1,36 +1,38 @@
 import React from "react";
+import { Trash3 } from "react-bootstrap-icons";
 import './ShoppingItem.css'
 
 
 export default function ShoppingItem(props) {
   console.log(props.item);
   return (
-    <div className="card-wrapper width">
-      <div className="card mb-3 ">
-        <div className="row g-0">
-          <div className="col-md-4">
+    <div className="card-wrapper width rounded-3">
+      <div className="card ">
+        <div className="">
+
+          <div className="d-flex align-items-center"> 
             <img
               src={props.item.product.image}
-              className="img-fluid rounded-start"
+              className="w-25 me-2 rounded-3"
               alt="..."
             />
-          </div>
-          <div className="col-md-8">
-            <div className="card-body">
-              <h5 className="card-title">{props.item.product.name}</h5>
-              <p className="card-text">Qty:{props.item.qty}</p>
-              <p className="card-text">pris: {props.item.product.price} SEK</p>
-              <p className="card-text">
-                subtotal: {parseInt(props.item.product.price) * props.item.qty}{" "}
-                SEK
-              </p>
-              <button onClick={() => props.onDelete(props.item)}>
-                Delete btn
+            <div className="ps-2 d-flex row">
+            <p className=" mb-0 card-text fw-bold">{props.item.product.name}</p>
+            <div className="d-flex align-items-center">
+              <p className="pe-2 mb-0 bd-highlight">Qty:{props.item.qty}</p>
+              <p className="pe-2  mb-0 bd-highlight">pris: {props.item.product.price}:-</p>
+              <p className="pe-2 mb-0 bd-highlight">
+                subtotal: {parseInt(props.item.product.price) * props.item.qty}:-
+              </p> 
+              <button className="border-0 text-danger bg-transparent" onClick={() => props.onDelete(props.item)}>
+              <Trash3 />
               </button>
-            </div>
+              </div>
+              </div>
+          </div>
           </div>
         </div>
       </div>
-    </div>
+   
   );
 }
