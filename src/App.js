@@ -3,7 +3,7 @@ import styles from "./App.module.css";
 import SearchResult from "./components/SearchResult";
 import Search from "./components/Search";
 import ShoppingCart from "./components/ShoppingCart";
-import magic from "./components/magic.mp4"
+import magic from "./components/magic.mp4";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -12,6 +12,7 @@ function App() {
   const [cartItems, setCartItems] = useState([]);
   const [total, setTotal] = useState(0);
   const [suggestions, setSuggestions] = useState([]);
+  const [disableRating, setDisableRating] = useState(false)
 
 
   useEffect(() => {
@@ -21,7 +22,7 @@ function App() {
           return response.json();
         })
         .then((data) => {
-          setProducts(data); //Update jsonData
+          setProducts(data); //Update products
         })
         .catch((error) => {
           console.error(error.message);
@@ -30,10 +31,36 @@ function App() {
     getJson();
   }, []);
 
+
+
+    const addRating = (productId, value) => {
+      const updateRating = () => {
+        // Create a copy of the original array
+        const copyArray = [...products];
+        // Update the Visible property with the given value
+        for (let i = 0; i < copyArray.length; i++) {
+          if(copyArray[i].productnumber == productId){
+            copyArray[i].rating.push(value)
+          }
+          
+          
+        }
+        
+        // Return the updated array
+        return copyArray;
+      };
+      setProducts(updateRating());
+      console.log(products)
+      setDisableRating(true)
+    };
+   
+    
+  
+
   /*
-  * This function is used for dropdown that shows top 3 suggestions.
-  * it triggered every time the value of searchTerm state change.
-  */ 
+   * This function is used for dropdown that shows top 3 suggestions.
+   * it triggered every time the value of searchTerm state change.
+   */
   //Using useEffect to update the searchinput to be same as rendered results
   useEffect(() => {
     const onChangeHandler = (e) => {
@@ -42,9 +69,9 @@ function App() {
         (product) =>
           product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           product.description.toLowerCase().includes(searchTerm.toLowerCase())
-      );  
+      );
 
-      //Sort the products in the list by amount of searchHits to get a list of the most frequently searched products 
+      //Sort the products in the list by amount of searchHits to get a list of the most frequently searched products
       const topSuggestions = filteredProducts.sort((a, b) => {
         if (b.searchHits === a.searchHits) {
           // If searchHits are equal, sort by productnumber
@@ -65,8 +92,9 @@ function App() {
    * This functioin is used to find SearchResults that match either the selected dropdown suggestion or searchTerm state
    */
   const onClickHandler = (dropdownItem) => {
+ setDisableRating(false)
     let results = [];
-    if (dropdownItem?.length > 0) { 
+    if (dropdownItem?.length > 0) {
       //Filter the products array based on the selected dropdown suggestion.
       results = products.filter(
         (product) =>
@@ -87,13 +115,14 @@ function App() {
     });
     //console.log(dropdownItem);
     //console.log(results);
-    //console.log(products); //10 products 
+    //console.log(products); //10 products
     setSearchResults(results); //Updates the searchResults state with the filtered results
-
   };
 
-  const onAddHandler = (product) => {
-    //(props.item)
+ /**
+  * This function 
+  */
+  const onAddHandler = (product) => {//(props.item)
     const exist = cartItems.find((item) => {
       return item.product.productnumber === product.productnumber;
     });
@@ -109,13 +138,14 @@ function App() {
         )
       );
     } else {
-      setCartItems([...cartItems, { product, qty: 1 }]);
+      setCartItems([...cartItems, { product, qty: 1 }]); 
     }
     setTotal(total + product.price);
     console.log(cartItems);
   };
 
   const onDeleteHandler = (product) => { //(props.item)
+   
     if (product.qty === 1) {
       setCartItems(
         cartItems.filter(
@@ -127,44 +157,48 @@ function App() {
       setCartItems(
         cartItems.map((x) =>
           x.product.productnumber === product.product.productnumber
-          ? { ...product, qty: product.qty - 1 }
-          : x
-          )
-          );
-          setTotal(total - product.product.price);
-        }
-      };
-      
-      return (
-        <div>
-        <video autoPlay loop muted id="video">
-        <source src={magic} type="video/mp4"/>
-        </video>
-        <div>
+            ? { ...product, qty: product.qty - 1 }
+            : x
+        )
+      );
+      setTotal(total - product.product.price);
+    }
+  };
 
-      <h1 className={styles.appTitle}>🔮 The Magical Shop 🔮</h1>
-      <div className={styles.searchbar}>
-        <Search
-          suggestions={suggestions}
-          searchResults={searchResults}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          clickHandler={onClickHandler}
+  return (
+    <div>
+      <video autoPlay loop muted id="video">
+        <source src={magic} type="video/mp4" />
+      </video>
+      <div>
+        <h1 className={styles.appTitle}>🔮 The Magical Shop 🔮</h1>
+        <div className={styles.searchbar}>
+          <Search
+            suggestions={suggestions}
+            searchResults={searchResults}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            clickHandler={onClickHandler}
           />
-      </div>
-      <div className={styles.app}>
-        <div className={styles.search}>
-          <SearchResult searchResults={searchResults} onAdd={onAddHandler} />
         </div>
-        <div className={styles.shoppingCart}>
-          <ShoppingCart
-            cartItems={cartItems}
-            total={total}
-            onDelete={onDeleteHandler}
+        <div className={styles.app}>
+          <div className={styles.search}>
+            <SearchResult
+              searchResults={searchResults}
+              addRating={addRating}
+              onAdd={onAddHandler}
+              disableRating={disableRating}
             />
+          </div>
+          <div className={styles.shoppingCart}>
+            <ShoppingCart
+              cartItems={cartItems}
+              total={total}
+              onDelete={onDeleteHandler}
+            />
+          </div>
         </div>
       </div>
-            </div>
     </div>
   );
 }

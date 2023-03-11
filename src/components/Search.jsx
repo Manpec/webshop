@@ -62,9 +62,11 @@ export default function Search(props) {
         </ul>
       )}
       {error && (
-        <span style={{ color: "red" }}>
+        <div style={{backgroundColor:'rgba(255, 0, 17, 0.34)'}}>
+        <span style={{ color: "white", fontSize:'20px' }}>
           Enter at least 3 characters!
         </span>
+        </div>
       )}
     </div>
   );

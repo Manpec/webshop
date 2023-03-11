@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import Details from "./Details";
+import Rating from "./Rating";
 
 export default function Item(props) {
-  const [modalIsOpen, setModalIsOpen] = useState(false); //modal is closed at the beggining
+  const [modalIsOpen, setModalIsOpen] = useState(false); //Modal is closed at the beggining
 
   const openModalHandler = () => {
     setModalIsOpen(true); //Open the modal-popup when user clicks button(item.jsx)
@@ -21,13 +22,13 @@ export default function Item(props) {
               src={props.item.image}
               className="img-fluid rounded-start"
               alt="..."
-              
             />
           </div>
           <div className="col-md-8">
             <div className="card-body">
               <h5 className="card-title">{props.item.name}</h5>
-              <p className="card-text">{props.item.price} SEK</p>
+              <Rating disableRating={props.disableRating} item={props.item} addRating={props.addRating} />
+              <p className="card-text">{props.item.price}:-</p>
               <button
                 type="button"
                 className="btn btn-outline-info"
