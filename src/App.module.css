@@ -2,10 +2,11 @@
     /* text-align: center; */
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     flex-grow: 1;
     align-items: center;
     margin-top:100px;
+    flex-wrap: wrap;
 }
 
 .appTitle{
