@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Details from "./Details";
+import Details from "./UI/Details";
 import Rating from "./Rating";
 
 export default function Item(props) {
@@ -27,7 +27,10 @@ export default function Item(props) {
           <div className="col-md-8">
             <div className="card-body">
               <h5 className="card-title">{props.item.name}</h5>
-              <Rating disableRating={props.disableRating} item={props.item} addRating={props.addRating} />
+              <Rating
+                item={props.item}
+                addRating={props.addRating}
+              />
               <p className="card-text">{props.item.price}:-</p>
               <button
                 type="button"
