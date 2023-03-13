@@ -4,7 +4,7 @@ export default function Search(props) {
   const [error, setError] = useState(false);
 
   /**
-   * the onClickHandler function is called when the Search button is clicked or a dropdown suggestion is selected 
+   * the onClickHandler function is called when the Search button is clicked or a dropdown suggestion is selected
    */
   const onClickHandler = (dropdownItem) => {
     //Check if the searchTerm state is longer than 2 characters
@@ -24,7 +24,7 @@ export default function Search(props) {
         <input
           type="text"
           className="form-control dropdown-toggle"
-          style={{backgroundColor:"rgba(205, 237, 245, 0.8)"}}
+          style={{ backgroundColor: "rgba(205, 237, 245, 0.8)" }}
           placeholder="Search"
           aria-label="Search"
           aria-describedby="button-addon2"
@@ -34,7 +34,7 @@ export default function Search(props) {
 
         <button
           className="btn btn-outline-secondary"
-          style={{backgroundColor:"rgba(253, 253, 253, 0.8)"}}
+          style={{ backgroundColor: "rgba(253, 253, 253, 0.8)" }}
           type="button"
           id="button-addon2"
           onClick={() => onClickHandler()}
@@ -62,10 +62,10 @@ export default function Search(props) {
         </ul>
       )}
       {error && (
-        <div style={{backgroundColor:'rgba(255, 0, 17, 0.34)'}}>
-        <span style={{ color: "white", fontSize:'20px' }}>
-          Enter at least 3 characters!
-        </span>
+        <div style={{ backgroundColor: "rgba(255, 0, 17, 0.34)" }}>
+          <span style={{ color: "white", fontSize: "20px" }}>
+            Enter at least 3 characters!
+          </span>
         </div>
       )}
     </div>
