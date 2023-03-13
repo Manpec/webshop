@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import styles from "./App.module.css";
 import SearchResult from "./components/SearchResult";
 import Search from "./components/Search";
-import ShoppingCart from "./components/ShoppingCart";
-import magic from "./components/magic.mp4";
+import ShoppingCart from "./components/ShoppingCart/ShoppingCart";
+import magic from "./components/UI/magic.mp4";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -12,8 +12,10 @@ function App() {
   const [cartItems, setCartItems] = useState([]);
   const [total, setTotal] = useState(0);
   const [suggestions, setSuggestions] = useState([]);
-  const [disableRating, setDisableRating] = useState(false)
 
+  /**
+   * Fetch data from JSON and updata products state
+   */
 
   useEffect(() => {
     let getJson = () => {
@@ -31,37 +33,10 @@ function App() {
     getJson();
   }, []);
 
-
-
-    const addRating = (productId, value) => {
-      const updateRating = () => {
-        // Create a copy of the original array
-        const copyArray = [...products];
-        // Update the Visible property with the given value
-        for (let i = 0; i < copyArray.length; i++) {
-          if(copyArray[i].productnumber == productId){
-            copyArray[i].rating.push(value)
-          }
-          
-          
-        }
-        
-        // Return the updated array
-        return copyArray;
-      };
-      setProducts(updateRating());
-      console.log(products)
-      setDisableRating(true)
-    };
-   
-    
-  
-
   /*
    * This function is used for dropdown that shows top 3 suggestions.
-   * it triggered every time the value of searchTerm state change.
+   * The useEffect hook is used to run this function every time the value of searchTerm state changes. (Using useEffect to update the searchinput to be same as rendered results)
    */
-  //Using useEffect to update the searchinput to be same as rendered results
   useEffect(() => {
     const onChangeHandler = (e) => {
       //Filter the list of products that match the searchTerm state
@@ -83,7 +58,6 @@ function App() {
       //Slice the top 3 of the topSuggestions list and map their name only and set the suggestions state
       const topThree = topSuggestions.slice(0, 3).map((item) => item.name);
       setSuggestions(topThree);
-      //console.log(topThree);
     };
     onChangeHandler();
   }, [searchTerm]);
@@ -92,7 +66,8 @@ function App() {
    * This functioin is used to find SearchResults that match either the selected dropdown suggestion or searchTerm state
    */
   const onClickHandler = (dropdownItem) => {
- setDisableRating(false)
+    // Update the disabledRating property with false to be able to rate again
+    setProducts(resetDisabledRating());
     let results = [];
     if (dropdownItem?.length > 0) {
       //Filter the products array based on the selected dropdown suggestion.
@@ -113,23 +88,20 @@ function App() {
     results.forEach((item) => {
       item.searchHits++;
     });
-    //console.log(dropdownItem);
-    //console.log(results);
-    //console.log(products); //10 products
     setSearchResults(results); //Updates the searchResults state with the filtered results
   };
 
- /**
-  * This function 
-  */
-  const onAddHandler = (product) => {//(props.item)
+  /**
+   * onAddHandler and onDeleteHandler to add or remove products from the ShoppingCart,
+   * as well as update the total price.
+   */
+  const onAddHandler = (product) => {
+    //Search the ShoppingCart's existing products to see if the product is already there.
     const exist = cartItems.find((item) => {
       return item.product.productnumber === product.productnumber;
     });
-
+    //If the product is already in the shopping cart, the quantity of the existing product in the shopping cart is updated by one.
     if (exist) {
-      console.log(exist); //{product: {…}, qty: 1}
-      console.log(exist.qty);
       setCartItems(
         cartItems.map((x) =>
           x.product.productnumber === product.productnumber
@@ -138,22 +110,23 @@ function App() {
         )
       );
     } else {
-      setCartItems([...cartItems, { product, qty: 1 }]); 
+      //If the product is not in the shopping cart, it is added with the quantity:1.
+      setCartItems([...cartItems, { product, qty: 1 }]);
     }
     setTotal(total + product.price);
-    console.log(cartItems);
   };
 
-  const onDeleteHandler = (product) => { //(props.item)
-   
+  const onDeleteHandler = (product) => {
+    //checks if the quantity of the product in the shopping cart is equal to one
     if (product.qty === 1) {
+      //Remove the product from the shopping cart
       setCartItems(
         cartItems.filter(
           (x) => x.product.productnumber !== product.product.productnumber
         )
       );
-      setTotal(total - product.product.price);
     } else {
+      //otherwise the quantity of the product is reduced by one
       setCartItems(
         cartItems.map((x) =>
           x.product.productnumber === product.product.productnumber
@@ -161,8 +134,35 @@ function App() {
             : x
         )
       );
-      setTotal(total - product.product.price);
     }
+    setTotal(total - product.product.price);
+  };
+
+  const addRating = (productnumber, ratingValue) => {
+    setProducts(updateRating(productnumber, ratingValue));
+  };
+
+  const updateRating = (productnumber, ratingValue) => {
+    // Create a copy of the original products array
+    const copyOfProducts = [...products];
+
+    for (let i = 0; i < copyOfProducts.length; i++) {
+      if (copyOfProducts[i].productnumber == productnumber) {
+        copyOfProducts[i].rating.push(ratingValue); // push the user rating into the property "rating" array
+        copyOfProducts[i].disabledRating = true; //disable the rating stars to prevent spam
+      }
+    }
+    return copyOfProducts; // Return the updated array
+  };
+
+  const resetDisabledRating = () => {
+    // Create a copy of the original products array
+    const copyOfProducts = [...products];
+    // Update the disabledRating property with false to be able to rate again
+    for (let i = 0; i < copyOfProducts.length; i++) {
+      copyOfProducts[i].disabledRating = false;
+    }
+    return copyOfProducts; // Return the updated array
   };
 
   return (
@@ -187,7 +187,6 @@ function App() {
               searchResults={searchResults}
               addRating={addRating}
               onAdd={onAddHandler}
-              disableRating={disableRating}
             />
           </div>
           <div className={styles.shoppingCart}>
