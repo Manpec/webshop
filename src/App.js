@@ -57,7 +57,7 @@ function App() {
       });
       //Slice the top 3 of the topSuggestions list and map their name only and set the suggestions state
       const topThree = topSuggestions.slice(0, 3).map((item) => item.name);
-      setSuggestions(topThree);
+      setSuggestions(topThree);//update suggestion state and send it as props to Search.jsx
     };
     onChangeHandler();
   }, [searchTerm]);
@@ -66,6 +66,7 @@ function App() {
    * This functioin is used to find SearchResults that match either the selected dropdown suggestion or searchTerm state
    */
   const onClickHandler = (dropdownItem) => {
+    //on first search, add disabledRating property to all products and set it to false
     // Update the disabledRating property with false to be able to rate again
     setProducts(resetDisabledRating());
     let results = [];
@@ -73,8 +74,7 @@ function App() {
       //Filter the products array based on the selected dropdown suggestion.
       results = products.filter(
         (product) =>
-          product.name.toLowerCase().includes(dropdownItem.toLowerCase()) ||
-          product.description.toLowerCase().includes(dropdownItem.toLowerCase())
+        product.name.toLowerCase() === dropdownItem.toLowerCase()
       );
     } else {
       //If no dropdown suggestion is selected, filters the products array based on the searchTerm state
@@ -157,10 +157,11 @@ function App() {
 
   const resetDisabledRating = () => {
     // Create a copy of the original products array
-    const copyOfProducts = [...products];
+    const copyOfProducts = [...products]; 
+    //on first search, add disabledRating attribute to all products 
     // Update the disabledRating property with false to be able to rate again
     for (let i = 0; i < copyOfProducts.length; i++) {
-      copyOfProducts[i].disabledRating = false;
+     copyOfProducts[i].disabledRating = false;
     }
     return copyOfProducts; // Return the updated array
   };
